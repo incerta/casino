@@ -4,20 +4,20 @@ import type { HandlerDeps } from '../generics'
 import {
   BONUS_ROUND_THRESHOLD,
   DEMO_STARTING_BALANCE,
-  findGame,
+  findGameOfType,
 } from '../games'
 import { evaluateReels, spinReels, type Random } from '../slot-engine'
 
 /**
  * Spins the reels server side with the visitor's current bet. The outcome is
  * decided here and persisted in `round_played`; the client reads it back
- * through the `gameSession` projection.
+ * through the `slotSession` projection.
  */
 export async function playRound(
   deps: HandlerDeps<{ random?: Random }>,
   payload: { gameId: GameId }
 ) {
-  const game = findGame(payload.gameId)
+  const game = findGameOfType(payload.gameId, 'slot')
 
   if (game === undefined) {
     return { success: false, reason: 'game-not-found' } as const

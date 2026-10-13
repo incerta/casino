@@ -1,6 +1,15 @@
 # Incerta Casino
 
-Demo slot games: a test environment with simulated outcomes and no real money.
+A demo casino interface: a test environment with simulated outcomes and no real money.
+
+The lobby has a casino-style shell: a sidebar, header search, hero carousel, category pills and game rows. Placeholder sections are shown as disabled "Soon" items, and Login/Register only explain that the site is a demo. It hosts three kinds of games:
+
+| Game          | Kind   | How it plays                                                                       |
+| ------------- | ------ | ---------------------------------------------------------------------------------- |
+| Chicken Cross | `road` | Cross lanes one at a time; each lane raises the multiplier. Cash out before a hit. |
+| Neon Dice     | `dice` | Pick a target (2–98) and roll over or under it; the odds set the multiplier.       |
+| Lucky Sevens  | `slot` | Three-reel slot.                                                                   |
+| Fruit Frenzy  | `slot` | Five-reel slot.                                                                    |
 
 A Bun-workspaces monorepo:
 
@@ -34,14 +43,19 @@ Visitors are anonymous. The client keeps a random `visitorId` in localStorage an
 
 Each game interaction is recorded as an event:
 
-| Interaction     | Event(s)                                      |
-| --------------- | --------------------------------------------- |
-| Open a game     | `game_opened`                                 |
-| Change the bet  | `bet_changed`                                 |
-| Spin            | `round_played` (+ `bonus_offered` on round 2) |
-| Claim the bonus | `bonus_claimed`                               |
+| Interaction                     | Event(s)                                                          |
+| ------------------------------- | ----------------------------------------------------------------- |
+| Open a game                     | `game_opened`                                                     |
+| Change the bet                  | `bet_changed`                                                     |
+| Spin (slot)                     | `round_played`                                                    |
+| Roll (dice)                     | `dice_rolled`                                                     |
+| Play (road)                     | `road_run_started` (the bet is deducted here)                     |
+| Go (road)                       | `road_lane_crossed`, or `road_run_hit` when a car hits            |
+| Cash out (road)                 | `road_run_cashed_out` (also written after crossing the last lane) |
+| Second finished round, any game | `bonus_offered`, in the same write as the round                   |
+| Claim the bonus                 | `bonus_claimed`                                                   |
 
-Spin outcomes are decided on the server. In this test environment, wins are deliberately frequent and are always labelled as simulated.
+Each game kind has its own session projection: `slotSession`, `diceSession` and `roadSession`. All outcomes are decided on the server. In this test environment, wins are deliberately frequent and are always labelled as simulated.
 
 ## Checks
 

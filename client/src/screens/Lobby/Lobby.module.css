@@ -1,85 +1,58 @@
 .page {
-  max-width: 1080px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: clamp(24px, 6vw, 64px) var(--gutter);
+  padding: 24px var(--gutter) 0;
 }
 
-.header {
-  margin-bottom: clamp(24px, 5vw, 48px);
-  text-align: center;
-}
-
-.title {
-  margin: 0 0 8px;
-  font-size: clamp(32px, 7vw, 56px);
-  line-height: 1.1;
-}
-
-.subtitle {
-  margin: 0;
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: -8px 0 -12px;
   color: var(--text-muted);
+  font-size: 14px;
 }
 
 .status {
-  text-align: center;
   color: var(--text-muted);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resultsTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.count {
+  margin-left: 6px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: none;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  transition:
-    transform 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.card:hover,
-.card:focus-visible {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-}
-
-.cardReels {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--bg-reel);
-  font-size: clamp(28px, 6vw, 40px);
-}
-
-.cardTitle {
-  margin: 0;
-  font-size: 22px;
-}
-
-.cardDescription {
-  flex: 1;
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.cardCta {
-  align-self: flex-start;
-  padding: 10px 20px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-text);
-  font-weight: 700;
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
 }

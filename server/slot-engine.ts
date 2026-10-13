@@ -1,4 +1,4 @@
-import type { GameConfig } from './games'
+import type { SlotGameConfig } from './games'
 
 export type Random = () => number
 
@@ -6,7 +6,7 @@ export type Random = () => number
  * Rolls one symbol per reel. With `demoWinChance` probability the spin is
  * forced to start with a winning run (test environment, simulated outcome).
  */
-export function spinReels(game: GameConfig, random: Random): string[] {
+export function spinReels(game: SlotGameConfig, random: Random): string[] {
   const pick = () => game.symbols[Math.floor(random() * game.symbols.length)]!
 
   const reels = Array.from({ length: game.reelCount }, () => pick().id)
@@ -25,7 +25,7 @@ export function spinReels(game: GameConfig, random: Random): string[] {
 
 /** Payout of the leftmost run of identical symbols */
 export function evaluateReels(
-  game: GameConfig,
+  game: SlotGameConfig,
   reels: string[],
   bet: number
 ): number {

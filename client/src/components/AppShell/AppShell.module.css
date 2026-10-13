@@ -1,0 +1,31 @@
+.shell {
+  --current-sidebar-width: var(--sidebar-width);
+  min-height: 100dvh;
+}
+
+.collapsed {
+  --current-sidebar-width: var(--sidebar-collapsed-width);
+}
+
+.content {
+  min-width: 0;
+  padding-top: var(--header-height);
+}
+
+.backdrop {
+  position: fixed;
+  inset: var(--header-height) 0 0;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 1024px) {
+  .content {
+    margin-left: var(--current-sidebar-width);
+    transition: margin-left 0.2s;
+  }
+
+  .backdrop {
+    display: none;
+  }
+}

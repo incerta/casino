@@ -1,16 +1,26 @@
 :root {
-  --bg: #120c24;
-  --bg-elevated: #1e1538;
-  --bg-reel: #0b0717;
-  --text: #f4f1ff;
-  --text-muted: #a99fcb;
-  --accent: #ffc531;
-  --accent-text: #1a1200;
-  --success: #3ee08f;
-  --danger: #ff5c7a;
-  --border: rgba(255, 255, 255, 0.1);
-  --radius: 16px;
-  --gutter: clamp(16px, 4vw, 40px);
+  --bg: #0e1013;
+  --surface: #17191d;
+  --surface-2: #1f2328;
+  --surface-3: #2a2f36;
+  --text: #ffffff;
+  --text-muted: #9aa0aa;
+  --accent: #6c4cff;
+  --accent-hover: #7d61ff;
+  --accent-soft: rgba(108, 76, 255, 0.16);
+  --cta: #2fbf4a;
+  --cta-hover: #38d455;
+  --success: #3ee07a;
+  --danger: #ff4d5e;
+  --gold: #ffc531;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --header-height: 72px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 76px;
+  --gutter: clamp(16px, 3vw, 32px);
 }
 
 *,
@@ -27,15 +37,9 @@ body {
 
 body {
   min-height: 100dvh;
-  background: radial-gradient(circle at 50% -20%, #3a1f78 0%, var(--bg) 60%)
-    fixed var(--bg);
+  background: var(--bg);
   color: var(--text);
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: var(--font-montserrat), system-ui, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,14 +49,70 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input {
   font: inherit;
+  color: inherit;
+}
+
+button {
   cursor: pointer;
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.1s;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-cta {
+  background: var(--cta);
+}
+
+.btn-cta:hover:not(:disabled) {
+  background: var(--cta-hover);
+}
+
+.btn-outline {
+  border-color: var(--accent);
+  background: transparent;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--accent-soft);
 }
 
 .demo-badge {
@@ -60,11 +120,37 @@ button:disabled {
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--gold);
   border-radius: 999px;
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-height: 108px;
+  }
 }

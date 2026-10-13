@@ -1,4 +1,4 @@
-import styles from './Game.module.css'
+import styles from './GameFrame.module.css'
 
 export function BonusModal(props: { claiming: boolean; onClaim: () => void }) {
   return (
@@ -21,7 +21,7 @@ export function BonusModal(props: { claiming: boolean; onClaim: () => void }) {
           value.
         </p>
         <button
-          className={styles.spin}
+          className={`btn btn-cta ${styles.action}`}
           disabled={props.claiming}
           onClick={props.onClaim}
           autoFocus

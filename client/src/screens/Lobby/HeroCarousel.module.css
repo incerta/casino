@@ -1,0 +1,131 @@
+.carousel {
+  position: relative;
+}
+
+.viewport {
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter);
+  overflow: hidden;
+}
+
+.track {
+  --slide: 100%;
+  --gap: 16px;
+  display: flex;
+  gap: var(--gap);
+  width: 100%;
+  transform: translateX(
+    calc((100% - var(--slide)) / 2 - var(--index) * (var(--slide) + var(--gap)))
+  );
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  flex: 0 0 var(--slide);
+  align-items: center;
+  min-height: clamp(260px, 30vw, 340px);
+  padding: clamp(20px, 4vw, 48px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  opacity: 0.4;
+  transition: opacity 0.5s;
+}
+
+.active {
+  opacity: 1;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 520px;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: clamp(26px, 4.4vw, 46px);
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.headlineAccent {
+  background: linear-gradient(90deg, #b9a8ff, #ffffff);
+  background-clip: text;
+  color: transparent;
+}
+
+.text {
+  max-width: 400px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+}
+
+.art {
+  position: absolute;
+  right: clamp(-20px, 4vw, 64px);
+  font-size: clamp(120px, 18vw, 220px);
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+  opacity: 0.9;
+}
+
+.controls {
+  position: absolute;
+  right: clamp(16px, 13%, 200px);
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: rgba(14, 16, 19, 0.7);
+}
+
+.controls button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.counter {
+  min-width: 34px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .controls {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 599px) {
+  .art {
+    top: 12px;
+    right: -16px;
+    font-size: 110px;
+    opacity: 0.35;
+  }
+}
+
+@media (min-width: 1024px) {
+  .track {
+    --slide: 76%;
+  }
+}

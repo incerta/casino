@@ -1,0 +1,19 @@
+.bubble {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: #2f7dff;
+  box-shadow: 0 8px 24px rgba(47, 125, 255, 0.4);
+  transition: transform 0.15s;
+}
+
+.bubble:hover {
+  transform: scale(1.06);
+}

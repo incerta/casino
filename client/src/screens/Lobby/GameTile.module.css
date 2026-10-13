@@ -1,0 +1,88 @@
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 3 / 4;
+  padding: 10px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  isolation: isolate;
+  transition: transform 0.2s;
+}
+
+.tile::after {
+  position: absolute;
+  inset: 45% 0 0;
+  z-index: -1;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  content: '';
+}
+
+.tile:hover,
+.tile:focus-visible {
+  transform: translateY(-4px);
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+}
+
+.demo,
+.new {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.demo {
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--gold);
+}
+
+.new {
+  background: var(--cta);
+}
+
+.glyph {
+  align-self: center;
+  font-size: clamp(48px, 9vw, 72px);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.kind {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(14, 16, 19, 0.6);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tile:hover .overlay,
+.tile:focus-visible .overlay {
+  opacity: 1;
+}

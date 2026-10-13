@@ -59,6 +59,29 @@ export const roundId = string()
   .maxLength(CUID_LENGTH)
   .brand(['idFor', 'Round'] as const)
 
+export type RollId = Infer<typeof rollId>
+export const rollId = string()
+  .minLength(CUID_LENGTH)
+  .maxLength(CUID_LENGTH)
+  .brand(['idFor', 'Roll'] as const)
+
+export type RunId = Infer<typeof runId>
+export const runId = string()
+  .minLength(CUID_LENGTH)
+  .maxLength(CUID_LENGTH)
+  .brand(['idFor', 'Run'] as const)
+
+export type DiceDirection = Infer<typeof diceDirection>
+export const diceDirection = union([literal('over'), literal('under')])
+
+export type RoadDifficulty = Infer<typeof roadDifficulty>
+export const roadDifficulty = union([
+  literal('easy'),
+  literal('medium'),
+  literal('hard'),
+  literal('hardcore'),
+])
+
 export type CQRSHandlerKind = Infer<typeof cqrsHandlerKind>
 export const cqrsHandlerKind = union([
   literal('projection'),

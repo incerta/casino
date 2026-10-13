@@ -2,25 +2,37 @@ import type { ShallowCQRSHandler, ShallowPublicCQRSHandler } from './generics'
 import type { CQRSHandlerKind } from './structs'
 
 import { games } from './projections/games'
-import { gameSession } from './projections/game-session'
+import { slotSession } from './projections/slot-session'
+import { diceSession } from './projections/dice-session'
+import { roadSession } from './projections/road-session'
 
 import { openGame } from './commands/open_game'
 import { changeBet } from './commands/change_bet'
 import { playRound } from './commands/play_round'
 import { claimBonus } from './commands/claim_bonus'
+import { rollDice } from './commands/roll_dice'
+import { startRoadRun } from './commands/start_road_run'
+import { crossRoadLane } from './commands/cross_road_lane'
+import { cashOutRoadRun } from './commands/cash_out_road_run'
 
 export type CQRSHandlers = typeof cqrsHandlers
 
 export const cqrsHandlers = {
   projection: {
     games,
-    gameSession,
+    slotSession,
+    diceSession,
+    roadSession,
   },
   command: {
     openGame,
     changeBet,
     playRound,
     claimBonus,
+    rollDice,
+    startRoadRun,
+    crossRoadLane,
+    cashOutRoadRun,
   },
 } as const satisfies Record<
   CQRSHandlerKind,
