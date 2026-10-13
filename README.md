@@ -20,6 +20,7 @@ A Bun-workspaces monorepo:
 
 ```sh
 bun install            # once, from the repo root
+bun run gen            # from the root: generates the client API types
 
 cd server && bun dev   # http://localhost:8000
 cd client && bun dev   # http://localhost:3000
@@ -37,7 +38,7 @@ Every request is `POST /cqrs/<projection|command>/<name>` with a JSON payload.
 - **Projections** (`server/projections/`) fold events into a read model on every request.
 - **Events** (`server/events/`) are schematox schemas. The file name matches the event `kind`.
 - **Handlers** are registered in `server/handlers.ts`.
-- **Client types** come from running `bun run gen` at the root. This writes `client/src/generated/client-api-types.ts`. From that file, `client/src/state/cqrs-api.ts` builds one RTK Query endpoint per handler: `useGamesQuery`, `usePlayRoundMutation` and so on. The generated file is committed, so a fresh clone runs without generating. Re-run `bun run gen` whenever a handler, its payload or its result changes, and never edit the file by hand.
+- **Client types** come from running `bun run gen` at the root. This writes `client/src/generated/client-api-types.ts`. From that file, `client/src/state/cqrs-api.ts` builds one RTK Query endpoint per handler: `useGamesQuery`, `usePlayRoundMutation` and so on. The generated file is gitignored. Re-run `bun run gen` whenever a handler, its payload or its result changes. The root `check`, `ts` and `test:e2e` scripts and the Docker build run it for you.
 
 Visitors are anonymous. The client keeps a random `visitorId` in localStorage and sends it as the `Authorization` header.
 

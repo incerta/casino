@@ -9,6 +9,9 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
+# Client API types are generated from the server handlers, not committed
+RUN bun run gen
+
 # Read by next.config.ts at build time to proxy /cqrs/* to the in-container API
 ENV API_PROXY_URL=http://127.0.0.1:8000
 

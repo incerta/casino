@@ -12,7 +12,7 @@
 - Projections fold events, which arrive newest first.
 - `GameConfig` in `games.ts` is a union on `type` (`slot`, `dice`, `road`). Each kind has its own commands and its own session projection (`slotSession`, `diceSession`, `roadSession`); commands reject other kinds with `game-not-found` via `findGameOfType`.
 - Outcomes are decided by the commands (`play_round.ts`, `roll_dice.ts`, `cross_road_lane.ts`). Never trust the client for outcomes. The client may compute odds for display only.
-- After adding or changing a handler, register it in `handlers.ts` and run `bun run gen` from the root. Never hand-edit `client/src/generated/client-api-types.ts`.
+- After adding or changing a handler, register it in `handlers.ts` and run `bun run gen` from the root. `client/src/generated/client-api-types.ts` is gitignored and generated; never hand-edit or commit it.
 
 ## Commands and the event ledger
 
