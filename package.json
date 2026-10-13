@@ -1,0 +1,13 @@
+{
+  "name": "incerta-casino",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "gen": "bun run --filter incerta-casino-server gen:client-api-types",
+    "ts": "bun run --filter incerta-casino-server ts && bun run --filter incerta-casino-client ts",
+    "check": "bun run --filter incerta-casino-server check && bun run --filter incerta-casino-client check"
+  }
+}

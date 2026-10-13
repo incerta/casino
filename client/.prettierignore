@@ -1,0 +1,5 @@
+node_modules
+.next
+db
+bun.lock
+next-env.d.ts

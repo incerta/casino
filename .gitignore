@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+*.tsbuildinfo
+
+# dotenv
+.env
+.env.local
+
+# next.js
+client/.next/
+client/out/
+client/next-env.d.ts
+
+# file based event store
+server/db/

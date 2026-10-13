@@ -1,0 +1,31 @@
+{
+  "name": "incerta-casino-server",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch index.ts",
+    "start": "bun run index.ts",
+    "formatter:fix": "prettier --write .",
+    "formatter:check": "prettier --check . || (echo 'ERROR: use `bun run formatter:fix`' && exit 1)",
+    "ts": "tsc --noEmit",
+    "gen:client-api-types": "bun scripts/gen-client-api-types.ts",
+    "test": "vitest --run --project unit",
+    "check": "bun run ts && bun run formatter:check && bun run test"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^3.3.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "schematox": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5",
+    "prettier": "^3.9.6",
+    "typescript": "^5",
+    "vitest": "^5"
+  }
+}
