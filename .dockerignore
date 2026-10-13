@@ -1,0 +1,10 @@
+**/node_modules
+.git
+client/.next
+client/.next-e2e
+client/test-results
+client/playwright-report
+server/db
+*.tsbuildinfo
+.env
+.env.local

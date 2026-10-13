@@ -37,7 +37,7 @@ Every request is `POST /cqrs/<projection|command>/<name>` with a JSON payload.
 - **Projections** (`server/projections/`) fold events into a read model on every request.
 - **Events** (`server/events/`) are schematox schemas. The file name matches the event `kind`.
 - **Handlers** are registered in `server/handlers.ts`.
-- **Client types** come from running `bun run gen` at the root. This writes `client/src/generated/client-api-types.ts`. From that file, `client/src/state/cqrs-api.ts` builds one RTK Query endpoint per handler: `useGamesQuery`, `usePlayRoundMutation` and so on.
+- **Client types** come from running `bun run gen` at the root. This writes `client/src/generated/client-api-types.ts`. From that file, `client/src/state/cqrs-api.ts` builds one RTK Query endpoint per handler: `useGamesQuery`, `usePlayRoundMutation` and so on. The generated file is committed, so a fresh clone runs without generating. Re-run `bun run gen` whenever a handler, its payload or its result changes, and never edit the file by hand.
 
 Visitors are anonymous. The client keeps a random `visitorId` in localStorage and sends it as the `Authorization` header.
 
@@ -73,3 +73,18 @@ bun run test:e2e                   # from the root or client/
 ```
 
 Playwright starts its own stack: the server on :8100 with `NODE_ENV=e2e` (event store in `server/db/e2e`, wiped on every start) and Next.js on :3100 with a separate `.next-e2e` build dir. It can run alongside a regular `bun dev`. Each spec runs on a desktop and a mobile (Pixel 7) project. Every test gets a fresh browser context, so it acts as a new anonymous visitor with its own event stream. Specs also assert on the event files the server writes.
+
+## Staging (Fly.io)
+
+A single container runs both apps: Next.js on :3000 proxies `/cqrs/*` to the API on :8000, so the browser only talks to one origin. The event store lives on a Fly volume mounted at `server/db`, so state survives deploys.
+
+```sh
+brew install flyctl && fly auth login              # once
+fly launch --no-deploy --copy-config               # once; creates the app from fly.toml
+fly volumes create casino_db --size 1 --region ams # once
+fly deploy                                         # every deploy
+```
+
+To reset staging state, run `fly ssh console -C "rm -rf /app/server/db/production"` and then `fly machine restart`.
+
+To try the image locally: `docker build -t casino-staging . && docker run -p 3000:3000 casino-staging`.
