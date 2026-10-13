@@ -1,8 +1,11 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { CommandId, GameId, RoundId } from '../structs'
 import type { HandlerDeps } from '../generics'
-import { BONUS_ROUND_THRESHOLD, findGame } from '../games'
-import { foldGameSession, readGameSessionEvents } from '../game-session-state'
+import {
+  BONUS_ROUND_THRESHOLD,
+  DEMO_STARTING_BALANCE,
+  findGame,
+} from '../games'
 import { evaluateReels, spinReels, type Random } from '../slot-engine'
 
 /**
@@ -19,8 +22,45 @@ export async function playRound(
     return { success: false, reason: 'game-not-found' } as const
   }
 
-  const queryResult = await readGameSessionEvents(deps, game.id)
-  const session = foldGameSession(game, queryResult.events)
+  // Consistency boundary: exactly the facts this decision depends on.
+  // Keep it inline; changing it changes which concurrent writes conflict.
+  const filter = { visitorId: deps.visitorId, gameId: game.id }
+  const queryResult = await deps.eventStore.read([
+    ['bet_changed', filter],
+    ['round_played', filter],
+    ['bonus_offered', filter],
+  ])
+
+  // Events arrive newest first
+  let bet: number | undefined
+  let balance: number | undefined
+  let roundsPlayed = 0
+  let bonusOffered = false
+
+  for (const event of queryResult.events) {
+    switch (event.kind) {
+      case 'bet_changed': {
+        bet ??= event.bet
+        break
+      }
+      case 'round_played': {
+        balance ??= event.balanceAfter
+        roundsPlayed++
+        break
+      }
+      case 'bonus_offered': {
+        bonusOffered = true
+        break
+      }
+    }
+  }
+
+  const session = {
+    bet: bet ?? game.defaultBet,
+    balance: balance ?? DEMO_STARTING_BALANCE,
+    roundsPlayed,
+    bonusOffered,
+  }
 
   if (session.balance < session.bet) {
     return { success: false, reason: 'insufficient-demo-balance' } as const
@@ -33,7 +73,7 @@ export async function playRound(
   const messageId = createId() as CommandId
 
   const offerBonus =
-    session.bonus === 'none' &&
+    session.bonusOffered === false &&
     session.roundsPlayed + 1 >= BONUS_ROUND_THRESHOLD
 
   const writeResult = await deps.eventStore.write(

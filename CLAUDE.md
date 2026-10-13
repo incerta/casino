@@ -6,13 +6,19 @@
 ## Server (event sourcing)
 
 - The event store lives in `server/shared/event-store/`, copied from vi-flow. Persisted events are never duplicated, overwritten or deleted.
-- `db/test` is wiped on every `initEventStore()` call when `NODE_ENV=test`.
+- `db/test` and `db/e2e` are wiped on every `initEventStore()` call when `NODE_ENV` is `test` or `e2e`.
 - Events contain only primitive fields, unions of primitives, or arrays of primitives. Every event needs a literal `kind` that matches its file name, `<entity>_<past-tense-verb>.ts`.
-- Commands read with a filter and pass the returned `dcb` to `write` when they depend on what they read.
 - Commands return `{ success: false, reason } as const` for business failures.
 - Projections fold events, which arrive newest first.
 - Spin outcomes are decided in `commands/play_round.ts`. Never trust the client for outcomes.
 - After adding or changing a handler, register it in `handlers.ts` and run `bun run gen` from the root. Never hand-edit `client/src/generated/client-api-types.ts`.
+
+## Commands and the event ledger
+
+- The event store is an append-only ledger: an event, once written, is permanent and is the source of truth. Treat every command that writes events as critical code. Change it deliberately, keep the diff minimal, and cover it with a test.
+- A command's read query defines its consistency boundary: the `dcb` from that read guards the `write`. Declare the query inline in the command file, listing exactly the event kinds and filters the decision depends on.
+- Don't share or abstract command queries or decision folds through helpers, base functions or projection code. A change made for one consumer must never silently widen, narrow or alter another command's boundary or logic.
+- Projections may share read and fold helpers among themselves, but commands must never import them.
 
 ## Tests (vitest, `server/**/*.test.ts`)
 

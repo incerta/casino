@@ -2,7 +2,6 @@ import { createId } from '@paralleldrive/cuid2'
 import type { CommandId, GameId } from '../structs'
 import type { HandlerDeps } from '../generics'
 import { findGame } from '../games'
-import { foldGameSession, readGameSessionEvents } from '../game-session-state'
 
 export async function claimBonus(
   deps: HandlerDeps,
@@ -14,14 +13,26 @@ export async function claimBonus(
     return { success: false, reason: 'game-not-found' } as const
   }
 
-  const queryResult = await readGameSessionEvents(deps, game.id)
-  const session = foldGameSession(game, queryResult.events)
+  // Consistency boundary: only the bonus lifecycle of this visitor and game.
+  // Keep it inline; changing it changes which concurrent writes conflict.
+  const filter = { visitorId: deps.visitorId, gameId: game.id }
+  const queryResult = await deps.eventStore.read([
+    ['bonus_offered', filter],
+    ['bonus_claimed', filter],
+  ])
 
-  if (session.bonus === 'none') {
+  const offered = queryResult.events.some(
+    (event) => event.kind === 'bonus_offered'
+  )
+  const claimed = queryResult.events.some(
+    (event) => event.kind === 'bonus_claimed'
+  )
+
+  if (offered === false) {
     return { success: false, reason: 'bonus-not-offered' } as const
   }
 
-  if (session.bonus === 'claimed') {
+  if (claimed) {
     return { success: false, reason: 'bonus-already-claimed' } as const
   }
 
