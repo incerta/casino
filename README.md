@@ -57,6 +57,8 @@ Each game interaction is recorded as an event:
 
 Each game kind has its own session projection: `slotSession`, `diceSession` and `roadSession`. All outcomes are decided on the server. In this test environment, wins are deliberately frequent and are always labelled as simulated.
 
+The file-based event store is fine for a demo but doesn't scale. [CAPACITY.md](CAPACITY.md) has measured limits and a migration path.
+
 ## Checks
 
 ```sh
