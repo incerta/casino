@@ -1,7 +1,15 @@
+# fly.toml app configuration file generated for incerta-casino-staging on 2026-10-13T18:32:59+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
 app = 'incerta-casino-staging'
 primary_region = 'ams'
 
 [build]
+[[mounts]]
+  source = 'casino_db'
+  destination = '/app/server/db'
 
 [http_service]
   internal_port = 3000
@@ -9,10 +17,6 @@ primary_region = 'ams'
   auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-
-[mounts]
-  source = 'casino_db'
-  destination = '/app/server/db'
 
 [[vm]]
   size = 'shared-cpu-1x'
