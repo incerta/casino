@@ -10,7 +10,8 @@ import { evaluateReels, spinReels, type Random } from '../slot-engine'
 
 /**
  * Spins the reels server side with the visitor's current bet. The outcome is
- * decided here and persisted in `round_played`; the client only renders it.
+ * decided here and persisted in `round_played`; the client reads it back
+ * through the `gameSession` projection.
  */
 export async function playRound(
   deps: HandlerDeps<{ random?: Random }>,
@@ -111,8 +112,5 @@ export async function playRound(
     return writeResult
   }
 
-  return {
-    success: true,
-    data: { roundId, reels, win, balanceAfter, bonusOffered: offerBonus },
-  } as const
+  return { success: true } as const
 }

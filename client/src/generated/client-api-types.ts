@@ -106,27 +106,12 @@ export type ClientAPI = {
             path: (string | number)[]
           }[]
         }
-      | {
-          readonly success: false
-          readonly reason: 'game-not-found'
-          readonly data?: undefined
-        }
+      | { readonly success: false; readonly reason: 'game-not-found' }
       | {
           readonly success: false
           readonly reason: 'insufficient-demo-balance'
-          readonly data?: undefined
         }
-      | {
-          readonly success: true
-          readonly data: {
-            readonly roundId: RoundId
-            readonly reels: string[]
-            readonly win: number
-            readonly balanceAfter: number
-            readonly bonusOffered: boolean
-          }
-          readonly reason?: undefined
-        }
+      | { readonly success: true; readonly reason?: undefined }
     >
     readonly claimBonus: (payload: { gameId: GameId }) => Promise<
       | { success: false; reason: 'conflict' }

@@ -19,6 +19,7 @@
 - A command's read query defines its consistency boundary: the `dcb` from that read guards the `write`. Declare the query inline in the command file, listing exactly the event kinds and filters the decision depends on.
 - Don't share or abstract command queries or decision folds through helpers, base functions or projection code. A change made for one consumer must never silently widen, narrow or alter another command's boundary or logic.
 - Projections may share read and fold helpers among themselves, but commands must never import them.
+- Commands return only an acknowledgement: `{ success: true }` or `{ success: false, reason }`. They never return read data. Clients get state exclusively from projections, which are refetched through the `Projection` tag after a successful command.
 
 ## Tests (vitest, `server/**/*.test.ts`)
 

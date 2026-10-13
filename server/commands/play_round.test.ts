@@ -15,7 +15,7 @@ function sequence(values: number[]): Random {
 }
 
 describe('playRound', () => {
-  test('pays a forced demo win and updates the demo balance', async () => {
+  test('pays a forced demo win and records it in round_played', async () => {
     const store = await initStore()
 
     const result = await playRound(
@@ -23,28 +23,36 @@ describe('playRound', () => {
       { gameId }
     )
 
-    expect(result).toMatchObject({
-      success: true,
-      data: {
-        reels: ['seven', 'seven', 'seven'],
-        win: 200,
-        balanceAfter: 1190,
-        bonusOffered: false,
-      },
+    expect(result).toEqual({ success: true })
+
+    const { events } = await store.read([
+      ['round_played', { visitorId, gameId }],
+    ])
+    expect(events).toHaveLength(1)
+    expect(events[0]).toMatchObject({
+      bet: 10,
+      reels: ['seven', 'seven', 'seven'],
+      win: 200,
+      balanceAfter: 1190,
+      simulated: true,
     })
   })
 
   test('deducts the bet on a losing spin', async () => {
     const store = await initStore()
 
-    const result = await playRound(
+    await playRound(
       { eventStore: store, visitorId, random: sequence([0, 0.25, 0.5, 0.99]) },
       { gameId }
     )
 
-    expect(result).toMatchObject({
-      success: true,
-      data: { reels: ['seven', 'bell', 'bar'], win: 0, balanceAfter: 990 },
+    const { events } = await store.read([
+      ['round_played', { visitorId, gameId }],
+    ])
+    expect(events[0]).toMatchObject({
+      reels: ['seven', 'bell', 'bar'],
+      win: 0,
+      balanceAfter: 990,
     })
   })
 
@@ -62,30 +70,39 @@ describe('playRound', () => {
       },
     ])
 
-    const result = await playRound(
+    await playRound(
       { eventStore: store, visitorId, random: sequence([0, 0.25, 0.5, 0.99]) },
       { gameId }
     )
 
-    expect(result).toMatchObject({ success: true, data: { balanceAfter: 950 } })
+    const { events } = await store.read([
+      ['round_played', { visitorId, gameId }],
+    ])
+    expect(events[0]).toMatchObject({ bet: 50, balanceAfter: 950 })
   })
 
   test('offers the simulated bonus once, after the second round', async () => {
     const store = await initStore()
     const deps = { eventStore: store, visitorId, random: () => 0 }
 
-    const first = await playRound(deps, { gameId })
-    const second = await playRound(deps, { gameId })
-    const third = await playRound(deps, { gameId })
-
-    expect(first).toMatchObject({ data: { bonusOffered: false } })
-    expect(second).toMatchObject({ data: { bonusOffered: true } })
-    expect(third).toMatchObject({ data: { bonusOffered: false } })
-
-    const { events } = await store.read([
+    await playRound(deps, { gameId })
+    const afterFirst = await store.read([
       ['bonus_offered', { visitorId, gameId }],
     ])
-    expect(events).toHaveLength(1)
+    expect(afterFirst.events).toHaveLength(0)
+
+    await playRound(deps, { gameId })
+    const afterSecond = await store.read([
+      ['bonus_offered', { visitorId, gameId }],
+    ])
+    expect(afterSecond.events).toHaveLength(1)
+    expect(afterSecond.events[0]).toMatchObject({ simulated: true })
+
+    await playRound(deps, { gameId })
+    const afterThird = await store.read([
+      ['bonus_offered', { visitorId, gameId }],
+    ])
+    expect(afterThird.events).toHaveLength(1)
   })
 
   test('rejects one of two concurrent spins with a conflict', async () => {
