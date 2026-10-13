@@ -48,3 +48,12 @@ Spin outcomes are decided on the server. In this test environment, wins are deli
 ```sh
 bun run check          # from the root: server (tsc, prettier, vitest) + client (tsc, prettier, eslint)
 ```
+
+## E2E tests (Playwright)
+
+```sh
+bunx playwright install chromium   # once, from client/
+bun run test:e2e                   # from the root or client/
+```
+
+Playwright starts its own stack: the server on :8100 with `NODE_ENV=e2e` (event store in `server/db/e2e`, wiped on every start) and Next.js on :3100 with a separate `.next-e2e` build dir. It can run alongside a regular `bun dev`. Each spec runs on a desktop and a mobile (Pixel 7) project. Every test gets a fresh browser context, so it acts as a new anonymous visitor with its own event stream. Specs also assert on the event files the server writes.

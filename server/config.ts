@@ -6,6 +6,7 @@ const envStruct = object({
     literal('development'),
     literal('production'),
     literal('test'),
+    literal('e2e'),
   ]),
 })
 
@@ -23,3 +24,9 @@ if (parsedEnv.success === false) {
 }
 
 export const env = parsedEnv.data
+
+export const PORT = Number(process.env.PORT ?? 8000)
+
+/** The only origin allowed by CORS (the Next.js client) */
+export const CLIENT_ORIGIN =
+  process.env.CLIENT_ORIGIN ?? 'http://localhost:3000'

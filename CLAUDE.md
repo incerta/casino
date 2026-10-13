@@ -27,3 +27,10 @@
 - Handle domain failures with an exhaustive `switch (res.reason)` that ends in `const missed: never`.
 - Screens live in `src/screens/<Name>/`, with CSS Modules next to them. `src/app/**/page.tsx` files are thin wrappers.
 - Everything game-related must be clearly labelled as simulated or test environment, with no real-money value implied.
+
+## E2E (Playwright, `client/e2e/specs/*.spec.ts`)
+
+- Run with `bun run test:e2e`. The config starts an isolated server on :8100 and client on :3100, so it doesn't conflict with `bun dev`.
+- Don't share state between tests. Each test is a new visitor (fresh context, new `visitorId`).
+- Prefer role and text locators. Shared actions such as `spin`, `changeBet` and `stat` live in `e2e/helpers/game.ts`.
+- To assert that an interaction was recorded, read the visitor's events with `e2e/helpers/events.ts`.

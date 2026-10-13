@@ -1,12 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 
-import { env } from './config'
+import { env, PORT, CLIENT_ORIGIN } from './config'
 import { initStore } from './event-store'
 import { dispatchCqrsHandlerRoute } from './routes/dispatch-cqrs-handler'
-
-const PORT = 8000
-const CLIENT_ORIGIN = 'http://localhost:3000' // TODO: use different origin in production env
 
 const app = express()
 

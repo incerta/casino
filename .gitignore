@@ -8,8 +8,13 @@ node_modules
 
 # next.js
 client/.next/
+client/.next-e2e/
 client/out/
 client/next-env.d.ts
+
+# playwright
+client/test-results/
+client/playwright-report/
 
 # file based event store
 server/db/

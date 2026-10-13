@@ -65,10 +65,11 @@ export async function initEventStore<T extends EventSchemaStruct>(
   const structsByKind = buildStructsByKindMap(eventStructs)
   const dbRoot = path.join(DEFAULT_DB_ROOT, env.NODE_ENV)
 
-  // The disposable test database is always wiped first, so every
-  // initEventStore() call under NODE_ENV=test starts from a clean,
-  // seed-defined slate with no leftover state from a prior run/case.
-  if (env.NODE_ENV === 'test') {
+  // The disposable test databases are always wiped first, so every
+  // initEventStore() call under NODE_ENV=test (vitest) or NODE_ENV=e2e
+  // (playwright stack) starts from a clean, seed-defined slate with no
+  // leftover state from a prior run/case.
+  if (env.NODE_ENV === 'test' || env.NODE_ENV === 'e2e') {
     await flushDb(dbRoot)
   }
 
